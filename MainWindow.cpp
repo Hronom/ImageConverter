@@ -26,7 +26,7 @@ void MainWindow::on_actionOpen_File_triggered()
     QString xOpenFilePath = QFileDialog::getOpenFileName(this,
                                                          tr("Открыть файл"),
                                                          qApp->applicationDirPath(),
-                                                         tr("Все файлы (*.*)"));
+                                                         tr("Все файлы") + " (*.*)");
     if (xOpenFilePath.isEmpty()) return;
 
     QPixmap xPixmap(xOpenFilePath);
@@ -51,7 +51,7 @@ void MainWindow::on_actionSave_Image_triggered()
     QString xSaveFilePath = QFileDialog::getSaveFileName(this,
                                                          tr("Сохранить файл"),
                                                          qApp->applicationDirPath(),
-                                                         tr("SVG (*.svg);;BMP (*.bmp);;JPG (*.jpg);;JPEG (*.jpeg);;PNG (*.png);;PPM (*.ppm);;TIFF (*.tiff);;XBM (*.xbm);;XPM (*.xpm)"));
+                                                         "SVG (*.svg);;BMP (*.bmp);;JPG (*.jpg);;JPEG (*.jpeg);;PNG (*.png);;PPM (*.ppm);;TIFF (*.tiff);;XBM (*.xbm);;XPM (*.xpm)");
 
     if (xSaveFilePath.isEmpty()) return;
 
@@ -76,7 +76,15 @@ void MainWindow::on_actionSave_Image_triggered()
 
 void MainWindow::on_actionAbout_Program_triggered()
 {
-    QMessageBox::about(this, tr("О ImageConverter"), tr("<b>О ImageConverter</b><hr>Автор: Hronom<br>email: hronom@gmail.com"));
+    QString xString;
+    xString.append("<b>Image Converter 0.0.1</b>");
+    xString.append("<hr>");
+    xString.append(tr("Автор:"));
+    xString.append(" Hronom");
+    xString.append("<br>");
+    xString.append("email: hronom@gmail.com");
+
+    QMessageBox::about(this, tr("О программе"), xString);
 }
 
 void MainWindow::on_actionAbout_Qt_triggered()
