@@ -77,12 +77,20 @@ void MainWindow::on_actionSave_Image_triggered()
 void MainWindow::on_actionAbout_Program_triggered()
 {
     QString xString;
-    xString.append("<b>Image Converter 0.0.1</b>");
-    xString.append("<hr>");
+    xString.append("<p><b>Image Converter 0.0.1</b></p>");
+
+    xString.append("<p>");
+    xString.append(tr("Ñאיע ןנמדנאללû:"));
+    xString.append(" <a href='http://hronom.github.com/ImageConverter/'>http://hronom.github.com/ImageConverter</a>");
+    xString.append("</p>");
+
+    xString.append("<p>");
     xString.append(tr("Àגעמנ:"));
     xString.append(" Hronom");
-    xString.append("<br>");
-    xString.append("email: hronom@gmail.com");
+    xString.append("</p>");
+
+    xString.append("<p> Email: <a href='mailto:hronom@gmail.com'>hronom@gmail.com</a></p>");
+    xString.append("<p> Blog: <a href='http://hronom.blogspot.com/'>http://hronom.blogspot.com</a></p>");
 
     QMessageBox::about(this, tr("Î ןנמדנאללו"), xString);
 }

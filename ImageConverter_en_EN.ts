@@ -53,7 +53,7 @@
     </message>
     <message utf8="true">
         <location filename="MainWindow.ui" line="194"/>
-        <location filename="MainWindow.cpp" line="87"/>
+        <location filename="MainWindow.cpp" line="95"/>
         <source>О программе</source>
         <translation>About program</translation>
     </message>
@@ -79,7 +79,12 @@
         <translation>All files</translation>
     </message>
     <message>
-        <location filename="MainWindow.cpp" line="82"/>
+        <location filename="MainWindow.cpp" line="83"/>
+        <source>Сайт программы:</source>
+        <translation>Website:</translation>
+    </message>
+    <message>
+        <location filename="MainWindow.cpp" line="88"/>
         <source>Автор:</source>
         <oldsource>Автор: </oldsource>
         <translation>Author:</translation>
