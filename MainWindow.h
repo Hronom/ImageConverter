@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QAbstractButton>
+#include <GlobalDefinitions.h>
 
 namespace Ui {
     class MainWindow;
@@ -13,8 +14,10 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 private:
     Ui::MainWindow *mUI;
+
     int mDefaultImageWidth;
     int mDefaultImageHeight;
+    int mDifferenceWidthHeight;
 
 public:
     explicit MainWindow(QWidget *xParent = 0);
@@ -28,6 +31,7 @@ private slots:
     void on_actionSave_Image_triggered();
     void on_actionOpen_File_triggered();
     void on_buttonBox_clicked(QAbstractButton *button);
+    void on_Proportion_clicked();
 };
 
 #endif // MAINWINDOW_H

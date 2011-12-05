@@ -30,10 +30,7 @@
        <enum>QFrame::Box</enum>
       </property>
       <property name="text">
-       <string/>
-      </property>
-      <property name="scaledContents">
-       <bool>false</bool>
+       <string notr="true"/>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>

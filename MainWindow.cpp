@@ -8,12 +8,17 @@
 #include <QFileInfo>
 #include <QFileIconProvider>
 #include <QPushButton>
+#include "AboutMyProgram.h"
 
 MainWindow::MainWindow(QWidget *xParent) : QMainWindow(xParent), mUI(new Ui::MainWindow)
 {
     mUI->setupUi(this);
     mUI->buttonBox->button(QDialogButtonBox::Apply)->setText(tr("Применить"));
     mUI->buttonBox->button(QDialogButtonBox::RestoreDefaults)->setText(tr("Восстановить значения по умолчанию"));
+
+    mDefaultImageWidth = 1;
+    mDefaultImageHeight = 1;
+    mDifferenceWidthHeight = 0;
 }
 
 MainWindow::~MainWindow()
@@ -42,6 +47,9 @@ void MainWindow::on_actionOpen_File_triggered()
 
     mDefaultImageWidth = mUI->Image->pixmap()->width();
     mDefaultImageHeight = mUI->Image->pixmap()->height();
+
+    mDifferenceWidthHeight = mDefaultImageWidth - mDefaultImageHeight;
+
     mUI->Width->setValue(mDefaultImageWidth);
     mUI->Height->setValue(mDefaultImageHeight);
 }
@@ -76,23 +84,10 @@ void MainWindow::on_actionSave_Image_triggered()
 
 void MainWindow::on_actionAbout_Program_triggered()
 {
-    QString xString;
-    xString.append("<p><b>Image Converter 0.0.1</b></p>");
-
-    xString.append("<p>");
-    xString.append(tr("Сайт программы:"));
-    xString.append(" <a href='http://hronom.github.com/ImageConverter/'>http://hronom.github.com/ImageConverter</a>");
-    xString.append("</p>");
-
-    xString.append("<p>");
-    xString.append(tr("Автор:"));
-    xString.append(" Hronom");
-    xString.append("</p>");
-
-    xString.append("<p> Email: <a href='mailto:hronom@gmail.com'>hronom@gmail.com</a></p>");
-    xString.append("<p> Blog: <a href='http://hronom.blogspot.com/'>http://hronom.blogspot.com</a></p>");
-
-    QMessageBox::about(this, tr("О программе"), xString);
+    AboutMyProgram *xAboutMyProgram;
+    xAboutMyProgram = new AboutMyProgram(this);
+    xAboutMyProgram->setAttribute(Qt::WA_DeleteOnClose, true);
+    xAboutMyProgram->show();
 }
 
 void MainWindow::on_actionAbout_Qt_triggered()
@@ -102,22 +97,14 @@ void MainWindow::on_actionAbout_Qt_triggered()
 
 void MainWindow::on_Width_valueChanged(int xValue)
 {
-    if(mUI->Proportion->checkState() == Qt::Checked && mUI->Width->hasFocus() == true && mUI->Image->pixmap() != NULL)
-    {
-        int xDifWH;
-        xDifWH = mUI->Image->pixmap()->width() - mUI->Image->pixmap()->height();
-        mUI->Height->setValue(mUI->Width->value() - xDifWH);
-    }
+    if(mUI->Proportion->checkState() == Qt::Checked && mUI->Width->hasFocus() == true)
+        mUI->Height->setValue(xValue - mDifferenceWidthHeight);
 }
 
 void MainWindow::on_Height_valueChanged(int xValue)
 {
-    if(mUI->Proportion->checkState() == Qt::Checked && mUI->Height->hasFocus() == true && mUI->Image->pixmap() != NULL)
-    {
-        int xDifWH;
-        xDifWH = mUI->Image->pixmap()->width() - mUI->Image->pixmap()->height();
-        mUI->Width->setValue(xDifWH + mUI->Height->value());
-    }
+    if(mUI->Proportion->checkState() == Qt::Checked && mUI->Height->hasFocus() == true)
+        mUI->Width->setValue(xValue + mDifferenceWidthHeight);
 }
 
 void MainWindow::on_buttonBox_clicked(QAbstractButton *button)
@@ -127,13 +114,24 @@ void MainWindow::on_buttonBox_clicked(QAbstractButton *button)
         if(mUI->buttonBox->standardButton(button) == QDialogButtonBox::Apply)
         {
             mUI->Image->setPixmap(mUI->Image->pixmap()->scaled(mUI->Width->value(), mUI->Height->value()));
+            mDefaultImageWidth = mUI->Image->pixmap()->width();
+            mDefaultImageHeight = mUI->Image->pixmap()->height();
+            mDifferenceWidthHeight = mDefaultImageWidth - mDefaultImageHeight;
         }
         if(mUI->buttonBox->standardButton(button) == QDialogButtonBox::RestoreDefaults)
         {
             mUI->Width->setValue(mDefaultImageWidth);
             mUI->Height->setValue(mDefaultImageHeight);
             mUI->Proportion->setChecked(false);
-            mUI->Image->setPixmap(mUI->Image->pixmap()->scaled(mDefaultImageWidth, mDefaultImageHeight));
         }
+    }
+}
+
+void MainWindow::on_Proportion_clicked()
+{
+    if(mUI->Proportion->checkState() == Qt::Checked)
+    {
+        mUI->Width->setValue(mDefaultImageWidth);
+        mUI->Height->setValue(mDefaultImageHeight);
     }
 }

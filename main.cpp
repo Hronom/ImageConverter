@@ -3,6 +3,7 @@
 #include <QLocale>
 #include <QTranslator>
 #include "MainWindow.h"
+#include <GlobalDefinitions.h>
 
 int main(int argc, char *argv[])
 {
@@ -11,8 +12,8 @@ int main(int argc, char *argv[])
     QTextCodec::setCodecForTr(QTextCodec::codecForName("Windows-1251"));//установка нужной кодировки для Tr
 
     QApplication xApp(argc, argv);
-    xApp.setApplicationName("ImageConverter");
-    xApp.setApplicationVersion("0.0.1");
+    xApp.setApplicationName(program_name);
+    xApp.setApplicationVersion(program_version);
     QApplication::addLibraryPath(QApplication::applicationDirPath() + "/plugins");
 
     QString xLocale = QLocale::system().name();

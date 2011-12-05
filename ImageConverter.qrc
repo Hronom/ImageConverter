@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/main">
+        <file>ImageConverter.png</file>
+    </qresource>
+</RCC>
