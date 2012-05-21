@@ -1,9 +1,11 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "GlobalDefinitions.h"
 #include <QMainWindow>
 #include <QAbstractButton>
-#include <GlobalDefinitions.h>
+#include <QGraphicsScene>
+#include <QGraphicsPixmapItem>
 
 namespace Ui {
     class MainWindow;
@@ -15,12 +17,15 @@ class MainWindow : public QMainWindow
 private:
     Ui::MainWindow *mUI;
 
+    //QGraphicsScene *mGraphicsScene;
+    QGraphicsPixmapItem *mGraphicsPixmapItem;
+
     int mDefaultImageWidth;
     int mDefaultImageHeight;
     int mDifferenceWidthHeight;
 
 public:
-    explicit MainWindow(QWidget *xParent = 0);
+    MainWindow(QWidget *xParent = 0);
     ~MainWindow();
 
 private slots:
@@ -32,6 +37,9 @@ private slots:
     void on_actionOpen_File_triggered();
     void on_buttonBox_clicked(QAbstractButton *button);
     void on_Proportion_clicked();
+    void on_zoominButton_clicked();
+    void on_zoomoutButton_clicked();
+    void on_zoomSlider_valueChanged(int xValue);
 };
 
 #endif // MAINWINDOW_H

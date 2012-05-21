@@ -9,6 +9,9 @@
 #include <QFileIconProvider>
 #include <QPushButton>
 #include "AboutMyProgram.h"
+#include <QGraphicsScene>
+#include <qmath.h>
+#include <QImage>
 
 MainWindow::MainWindow(QWidget *xParent) : QMainWindow(xParent), mUI(new Ui::MainWindow)
 {
@@ -16,9 +19,19 @@ MainWindow::MainWindow(QWidget *xParent) : QMainWindow(xParent), mUI(new Ui::Mai
     mUI->buttonBox->button(QDialogButtonBox::Apply)->setText(tr("Применить"));
     mUI->buttonBox->button(QDialogButtonBox::RestoreDefaults)->setText(tr("Восстановить значения по умолчанию"));
 
-    mDefaultImageWidth = 1;
-    mDefaultImageHeight = 1;
-    mDifferenceWidthHeight = 0;
+    QGraphicsScene *xGraphicsScene;
+    xGraphicsScene = new QGraphicsScene(this);
+    mUI->graphicsView->setScene(xGraphicsScene);
+
+    mGraphicsPixmapItem = xGraphicsScene->addPixmap(QPixmap(":/main/ImageConverter.png"));
+
+    mDefaultImageWidth = mGraphicsPixmapItem->pixmap().width();
+    mDefaultImageHeight = mGraphicsPixmapItem->pixmap().height();
+
+    mDifferenceWidthHeight = mDefaultImageWidth - mDefaultImageHeight;
+
+    mUI->Width->setValue(mDefaultImageWidth);
+    mUI->Height->setValue(mDefaultImageHeight);
 }
 
 MainWindow::~MainWindow()
@@ -43,10 +56,10 @@ void MainWindow::on_actionOpen_File_triggered()
         xPixmap = xIcon.pixmap(257);
     }
 
-    mUI->Image->setPixmap(xPixmap);
+    mGraphicsPixmapItem->setPixmap(xPixmap);
 
-    mDefaultImageWidth = mUI->Image->pixmap()->width();
-    mDefaultImageHeight = mUI->Image->pixmap()->height();
+    mDefaultImageWidth = mGraphicsPixmapItem->pixmap().width();
+    mDefaultImageHeight = mGraphicsPixmapItem->pixmap().height();
 
     mDifferenceWidthHeight = mDefaultImageWidth - mDefaultImageHeight;
 
@@ -66,7 +79,7 @@ void MainWindow::on_actionSave_Image_triggered()
     QFileInfo xSaveFileInfo(xSaveFilePath);
     if(xSaveFileInfo.completeSuffix() == "svg")
     {
-        QRect xRectangle = QRect(0, 0, mUI->Width->value(), mUI->Height->value());
+        QRect xRectangle = QRect(0, 0, mGraphicsPixmapItem->pixmap().width(), mGraphicsPixmapItem->pixmap().height());
 
         QSvgGenerator xGenerator;
         xGenerator.setFileName(xSaveFilePath);
@@ -75,11 +88,31 @@ void MainWindow::on_actionSave_Image_triggered()
 
         QPainter xPainter;
         xPainter.begin(&xGenerator);
-        xPainter.drawPixmap(xRectangle, *mUI->Image->pixmap());
+        xPainter.drawPixmap(xRectangle, mGraphicsPixmapItem->pixmap());
         xPainter.end();
     }
     else
-        mUI->Image->pixmap()->save(xSaveFilePath);
+    {
+        if(xSaveFileInfo.completeSuffix() == "png")
+            mGraphicsPixmapItem->pixmap().save(xSaveFilePath);
+        else
+        {
+            int xCurrentPixmapWidth = mGraphicsPixmapItem->pixmap().width();
+            int xCurrentPixmapHeight = mGraphicsPixmapItem->pixmap().height();
+
+            QRect xRectangle = QRect(0, 0, xCurrentPixmapWidth, xCurrentPixmapHeight);
+
+            QPixmap xTempPixmap(xCurrentPixmapWidth, xCurrentPixmapHeight);
+            xTempPixmap.fill(Qt::white);
+
+            QPainter xPainter;
+            xPainter.begin(&xTempPixmap);
+            xPainter.drawPixmap(xRectangle, mGraphicsPixmapItem->pixmap());
+            xPainter.end();
+
+            xTempPixmap.save(xSaveFilePath);
+        }
+    }
 }
 
 void MainWindow::on_actionAbout_Program_triggered()
@@ -109,21 +142,18 @@ void MainWindow::on_Height_valueChanged(int xValue)
 
 void MainWindow::on_buttonBox_clicked(QAbstractButton *button)
 {
-    if(mUI->Image->pixmap() != NULL)
+    if(mUI->buttonBox->standardButton(button) == QDialogButtonBox::Apply)
     {
-        if(mUI->buttonBox->standardButton(button) == QDialogButtonBox::Apply)
-        {
-            mUI->Image->setPixmap(mUI->Image->pixmap()->scaled(mUI->Width->value(), mUI->Height->value()));
-            mDefaultImageWidth = mUI->Image->pixmap()->width();
-            mDefaultImageHeight = mUI->Image->pixmap()->height();
-            mDifferenceWidthHeight = mDefaultImageWidth - mDefaultImageHeight;
-        }
-        if(mUI->buttonBox->standardButton(button) == QDialogButtonBox::RestoreDefaults)
-        {
-            mUI->Width->setValue(mDefaultImageWidth);
-            mUI->Height->setValue(mDefaultImageHeight);
-            mUI->Proportion->setChecked(false);
-        }
+        mGraphicsPixmapItem->setPixmap(mGraphicsPixmapItem->pixmap().scaled(mUI->Width->value(), mUI->Height->value()));
+        mDefaultImageWidth = mGraphicsPixmapItem->pixmap().width();
+        mDefaultImageHeight = mGraphicsPixmapItem->pixmap().height();
+        mDifferenceWidthHeight = mDefaultImageWidth - mDefaultImageHeight;
+    }
+    if(mUI->buttonBox->standardButton(button) == QDialogButtonBox::RestoreDefaults)
+    {
+        mUI->Width->setValue(mDefaultImageWidth);
+        mUI->Height->setValue(mDefaultImageHeight);
+        mUI->Proportion->setChecked(false);
     }
 }
 
@@ -134,4 +164,24 @@ void MainWindow::on_Proportion_clicked()
         mUI->Width->setValue(mDefaultImageWidth);
         mUI->Height->setValue(mDefaultImageHeight);
     }
+}
+
+void MainWindow::on_zoominButton_clicked()
+{
+    mUI->zoomSlider->setValue(mUI->zoomSlider->value()+1);
+}
+
+void MainWindow::on_zoomoutButton_clicked()
+{
+    mUI->zoomSlider->setValue(mUI->zoomSlider->value()-1);
+}
+
+void MainWindow::on_zoomSlider_valueChanged(int xValue)
+{
+    qreal xScale = qPow(qreal(2), (xValue - 250) / qreal(50));
+
+    QMatrix xMatrix;
+    xMatrix.scale(xScale, xScale);
+
+    mUI->graphicsView->setMatrix(xMatrix);
 }
