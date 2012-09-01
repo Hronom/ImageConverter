@@ -1,24 +1,24 @@
 QT       += core gui svg network
 
 TARGET = ImageConverter
-VERSION = 1.0.0
+VERSION = 1.2.0
 TEMPLATE = app
 
 CONFIG(debug, debug|release) {
-    LIBS += -L$$PWD/../../NewVersionChecker/NewVersionChecker-build-desktop/debug -lNewVersionChecker
-    PRE_TARGETDEPS += $$PWD/../../NewVersionChecker/NewVersionChecker-build-desktop/debug/libNewVersionChecker.a
+    LIBS += -L$$PWD/../../VersionChecker/VersionChecker-build-desktop/debug -lVersionChecker
+    PRE_TARGETDEPS += $$PWD/../../VersionChecker/VersionChecker-build-desktop/debug/libVersionChecker.a
 }
 
 CONFIG(release, debug|release) {
-    LIBS += -L$$PWD/../../NewVersionChecker/NewVersionChecker-build-desktop/release -lNewVersionChecker
-    PRE_TARGETDEPS += $$PWD/../../NewVersionChecker/NewVersionChecker-build-desktop/release/libNewVersionChecker.a
+    LIBS += -L$$PWD/../../VersionChecker/VersionChecker-build-desktop/release -lVersionChecker
+    PRE_TARGETDEPS += $$PWD/../../VersionChecker/VersionChecker-build-desktop/release/libVersionChecker.a
     DEFINES += QT_NO_DEBUG_OUTPUT
 }
 
-INCLUDEPATH += $$PWD/../../NewVersionChecker/NewVersionChecker/
+INCLUDEPATH += $$PWD/../../VersionChecker/VersionChecker/
 
 SOURCES += main.cpp\
-        MainWindow.cpp \
+    MainWindow.cpp \
     AboutMyProgram.cpp
 
 HEADERS  += MainWindow.h \

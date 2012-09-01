@@ -2,7 +2,7 @@
 #define ABOUTMYPROGRAM_H
 
 #include <QDialog>
-#include "NewVersionChecker.h"
+#include "VersionChecker.h"
 
 namespace Ui {
 class AboutMyProgram;
@@ -14,15 +14,16 @@ class AboutMyProgram : public QDialog
 private:
     Ui::AboutMyProgram *mUI;
 
-    NewVersionChecker *mNewVersionChecker;
+    VersionChecker *mVersionChecker;
 
 public:
     AboutMyProgram(QWidget *xParent = 0);
     ~AboutMyProgram();
 
 private slots:
-    void versionChecked(QString xCurrentVersion, QString xDownloadLink);
-    void versionNotChecked(QString xError);
+    void newVersionAvailable(int xMajorVer, int xMinorVer, int xRevisVer, const QString &xDownloadLink);
+    void newVersionNotAvailable();
+    void errorHappened(QString xError);
     void on_checkVersionButton_clicked();
 };
 

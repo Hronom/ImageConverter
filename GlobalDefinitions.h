@@ -2,6 +2,8 @@
 #define GLOBALDEFINITIONS_H
 
 #define program_name "Image Converter"
-#define program_version "1.0.0"
+#define MajorVer 1
+#define MinorVer 2
+#define RevisVer 0
 
 #endif // GLOBALDEFINITIONS_H

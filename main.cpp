@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
 
     QApplication xApp(argc, argv);
     xApp.setApplicationName(program_name);
-    xApp.setApplicationVersion(program_version);
+    xApp.setApplicationVersion(QString::number(MajorVer)+"."+QString::number(MinorVer)+"."+QString::number(RevisVer));
     QApplication::addLibraryPath(QApplication::applicationDirPath() + "/plugins");
 
     QString xLocale = QLocale::system().name();
